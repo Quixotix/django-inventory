@@ -23,13 +23,14 @@ class InventoryItem(models.Model):
     An inventoried item represented by any Django model by means of the Content
     Types framework.
     """
+    sku = models.CharField(max_length=75, unique=True, db_index=True)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
-    stock_status = models.ForeignKey(StockStatus, db_index=True)
-    stock_comment = models.CharField(max_length=255, blank=True, null=True)
     qty = models.PositiveIntegerField(default=0)
     location = models.CharField(max_length=50, blank=True, null=True)
+    stock_status = models.ForeignKey(StockStatus, db_index=True)
+    stock_comment = models.CharField(max_length=255, blank=True, null=True)
     
     def __unicode__(self):
         content_type = ContentType.objects.get_for_model(self.content_object)
@@ -60,8 +61,8 @@ class Transaction(models.Model):
     )
     
     user = models.ForeignKey(User, blank=True, null=True)
-    type = models.PositiveIntegerField(choices=TYPE_CHOICES, default=5, db_index=True)
-    date = models.DateTimeField(db_index=True)
+    transaction_type = models.PositiveIntegerField(choices=TYPE_CHOICES, db_index=True)
+    date = models.DateTimeField(auto_now_add=True, db_index=True)
     comment = models.CharField(max_length=255, blank=True, null=True)
     # optional generic relationship to associated object (eg. order, po, etc.)
     content_type = models.ForeignKey(ContentType, blank=True, null=True)
@@ -78,6 +79,5 @@ class TransactionItem(models.Model):
     transaction = models.ForeignKey(Transaction)
     item = models.ForeignKey(InventoryItem)
     qty = models.PositiveIntegerField(default=0)
-    price_each = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
-    total = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+    unit_cost = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     
