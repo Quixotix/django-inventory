@@ -33,13 +33,13 @@ model with the inventory item. For example, an project which has a `Product`
 model to represent products sold on a website might create an `InvetoryItem` for
 that product as follows:
 
-        from inventory.models import InventoryItem, StockStatus
-        
-        stockstatus = StockStatus.objects.get(name="In Stock")
-        product = Product() 
-        item = InventoryItem(sku="0001", content_object=product, 
-                             stock_status=stockstatus)
-        item.save()
+    from inventory.models import InventoryItem, StockStatus
+    
+    stockstatus = StockStatus.objects.get(name="In Stock")
+    product = Product() 
+    item = InventoryItem(sku="0001", content_object=product, 
+                         stock_status=stockstatus)
+    item.save()
 
 
 Once an `InventoryItem` exists, inventory "transactions" can be performed on the
